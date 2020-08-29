@@ -29,35 +29,35 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	public User validateUser(Login login) {
-		// get the current hibernate session
-		Session currentSession = sessionFactory.getCurrentSession();
-						
+		List<User> list = getUsers();
 		// create a query
-	
-		  Query<User> theQuery = currentSession.
-		  createQuery("from User where userName=:userName AND password=:password",User.class); 
-		  theQuery.setParameter("userName", login.getUserName());
-		  theQuery.setParameter("password", login.getPassword());
-		  List<User> list = theQuery.getResultList();
-		  User user = null;
+		System.out.println("login"+login.getUserName()+login.getPassword());
 
-			if ((list != null) && (list.size() > 0)) {
-				user = list.get(0); 		
-			 }
-			
-				
-		// execute query and get result list
+		if (list.size()>0 ) {
+			for(User u : list) {
+			if(u.getUserName().equals(login.getUserName()) && u.getPassword().equals(login.getPassword()))
+			{
+				return u;
+			}
+			}
+		}
 		
-		System.out.println("Result"+user.toString());
-		return user;
+		return null;
 	}
 
 	@Override
 	public List<User> getUsers() {
 		
 		Session currentSession = sessionFactory.getCurrentSession();
-	
-		return null;
+		// create a query
+		Query<User> theQuery = currentSession.createQuery("from Customer", User.class);
+				
+		// execute query and get result list
+		List<User> users = theQuery.getResultList();
+						
+		// return the results		
+		return users;
+		
 	}
 
 }
